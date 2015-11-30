@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+struct data
+{
+	int height;
+	int weight;
+	struct data *next;
+};
+
+
+struct data *creat(struct data *head);
+void classify(struct data *head);
+
+int main()
+{
+	struct data *head = NULL;
+	head = creat(head);
+	classify(head);
+	return 0;
+}
+
+struct data *creat(struct data *head)
+{
+	struct data *p1, *p2;
+	int a, i = 1;
+	printf("请输入运动员%d身高(输入0结束):",i);
+	scanf_s("%d", &a);
+	while (a != 0)
+	{
+		p1 = (struct data *)malloc(sizeof(struct data));
+		if (head == NULL)
+		{
+			head = p1;
+		}
+		else
+		{
+			p2->next = p1;
+		}
+		p1->next = NULL;
+		p1->height = a;
+		printf("请输入运动员%d体重:",i++);
+		scanf_s("%d", &p1->weight);
+		printf("请输入运动员%d身高(输入0结束):",i);
+		scanf_s("%d", &a);
+		p2 = p1;
+	}
+	return head;
+}
+
+void classify(struct data *head)
+{
+	struct data *p = head;
+	double distance1, distance2;
+	int n1 = 0, n2 = 0, sumx1 = 0, sumy1 = 0, sumx2 = 0, sumy2 = 0, i = 1;
+	double Category1_Zx, Category1_Zy, Category1_Zx_pre, Category1_Zy_pre;
+	double Category2_Zx, Category2_Zy, Category2_Zx_pre, Category2_Zy_pre;
+	Category1_Zx = p->height;
+	Category1_Zy = p->weight;
+	while (p != NULL)
+	{
+		Category2_Zx = p->height;
+		Category2_Zy = p->weight;
+		p = p->next;
+	}
+	p = head;
+	while (1)
+	{
+		p = head;
+		n1 = 0; 
+		n2 = 0;
+		sumx1 = 0;
+		sumy1 = 0;
+		sumx2 = 0;
+		sumy2 = 0;
+		while (p != NULL)
+		{
+			distance1 = sqrt((p->height - Category1_Zx)*(p->height - Category1_Zx) + (p->weight - Category1_Zy)*(p->weight - Category1_Zy));
+			distance2 = sqrt((p->height - Category2_Zx)*(p->height - Category2_Zx) + (p->weight - Category2_Zy)*(p->weight - Category2_Zy));
+			if (distance1 <= distance2)
+			{
+				n1++;
+				sumx1 += p->height;
+				sumy1 += p->weight;
+			}
+			else
+			{
+				n2++;
+				sumx2 += p->height;
+				sumy2 += p->weight;
+			}
+			p = p->next;
+		}
+		Category1_Zx_pre = Category1_Zx;
+		Category1_Zy_pre = Category1_Zy;
+		Category2_Zx_pre = Category1_Zx;
+		Category2_Zy_pre = Category1_Zy;
+		Category1_Zx = sumx1 / n1;
+		Category1_Zy = sumy1 / n1;
+		Category2_Zx = sumx2 / n2;
+		Category2_Zy = sumy2 / n2;
+		if (Category1_Zx_pre == Category1_Zx && Category1_Zy_pre == Category1_Zy && Category2_Zx_pre == Category1_Zx && Category2_Zy_pre == Category1_Zy)
+		{
+			break;
+		}
+	}
+	p = head;
+	while (p !=NULL)
+	{
+		distance1 = sqrt((p->height - Category1_Zx)*(p->height - Category1_Zx) + (p->weight - Category1_Zy)*(p->weight - Category1_Zy));
+		distance2 = sqrt((p->height - Category2_Zx)*(p->height - Category2_Zx) + (p->weight - Category2_Zy)*(p->weight - Category2_Zy));
+		if (distance1 <= distance2)
+		{
+			printf("运动员%d属于类别1\n", i++);
+		}
+		else
+		{
+			printf("运动员%d属于类别2\n", i++);
+		}
+		p = p->next;
+	}
+}
